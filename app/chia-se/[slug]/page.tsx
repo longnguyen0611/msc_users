@@ -185,16 +185,43 @@ export default function BlogPostPage({ params }: Props) {
                           <code className={className}>{children}</code>
                       },
                       pre: ({children}) => <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4">{children}</pre>,
-                      img: ({src, alt}) => (
-                        <div className="my-6">
-                          <Image 
-                            src={src || '/placeholder.svg'} 
-                            alt={alt || ''} 
-                            width={800} 
-                            height={400} 
-                            className="rounded-lg shadow-md w-full h-auto"
-                          />
-                        </div>
+                      img: (props: any) => {
+                        const { src, alt, style } = props;
+                        
+                        // Nếu có style inline, sử dụng img tag thường để tôn trọng style
+                        if (style) {
+                          return (
+                            <img 
+                              src={src || '/placeholder.svg'} 
+                              alt={alt || ''} 
+                              style={style}
+                              className="rounded-lg shadow-md"
+                            />
+                          );
+                        }
+                        
+                        // Nếu không có style inline, sử dụng Next.js Image
+                        return (
+                          <div className="my-6">
+                            <Image 
+                              src={src || '/placeholder.svg'} 
+                              alt={alt || ''} 
+                              width={800} 
+                              height={400} 
+                              className="rounded-lg shadow-md w-full h-auto"
+                            />
+                          </div>
+                        );
+                      },
+                      figure: (props: any) => (
+                        <figure style={props.style} className="my-6">
+                          {props.children}
+                        </figure>
+                      ),
+                      figcaption: (props: any) => (
+                        <figcaption style={props.style} className="text-center text-sm text-gray-600 mt-2">
+                          {props.children}
+                        </figcaption>
                       ),
                       a: ({href, children}) => (
                         <a href={href} className="text-blue-600 hover:text-blue-800 hover:underline" target="_blank" rel="noopener noreferrer">
